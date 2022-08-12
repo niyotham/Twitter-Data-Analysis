@@ -1,6 +1,9 @@
 import unittest
 import pandas as pd
 import sys, os
+import pprint
+from textblob import TextBlob 
+
 
 sys.path.append(os.path.abspath(os.path.join("../..")))
 
@@ -11,7 +14,7 @@ from extract_dataframe import TweetDfExtractor
 # we will need about 5 tweet samples. 
 # Create a sample not more than 10 tweets and place it in a json file.
 # Provide the path to the samples tweets file you created below
-sampletweetsjsonfile = ""   #put here the path to where you placed the file e.g. ./sampletweets.json. 
+sampletweetsjsonfile = "./data/sample_data.json"   #put here the path to where you placed the file e.g. ./sampletweets.json. 
 _, tweet_list = read_json(sampletweetsjsonfile)
 
 columns = [
@@ -53,20 +56,25 @@ class TestTweetDfExtractor(unittest.TestCase):
 
     def test_find_statuses_count(self):
         self.assertEqual(
-            self.df.find_statuses_count(), <provide a list of the first five status counts>
-        )
-
+            self.df.find_statuses_count()[0],tweet_list[0] ) #<provide a list of the first five status counts>
+        
     def test_find_full_text(self):
-        text = <provide a list of the first five full texts>
-
+        text = self.df.find_full_text()   #<provide a list of the first five full texts>
         self.assertEqual(self.df.find_full_text(), text)
 
     def test_find_sentiments(self):
+        polarity = []
+        subjectivity = []
+        for t in tweet_list:
+            sentiment = TextBlob(t).sentiment
+            polarity.append(sentiment.polarity)
+            subjectivity.append(sentiment.subjectivity)
+            
         self.assertEqual(
             self.df.find_sentiments(self.df.find_full_text()),
             (
-                <provide a list of the first five sentiment values>,
-                <provide a list of the first five polarity values>,
+                subjectivity[:6],# <provide a list of the first five sentiment values>,
+                polarity[:6]# <provide a list of the first five polarity values>,
             ),
         )
 

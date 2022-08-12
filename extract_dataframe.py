@@ -2,6 +2,7 @@ import json
 import re
 import pandas as pd
 from textblob import TextBlob
+import pprint
 
 
 def read_json(json_file: str)->list:
@@ -37,7 +38,7 @@ class TweetDfExtractor:
 
     # an example function
     def find_statuses_count(self)->list:
-        self.statuses_count= [tweet['is_quote_status'] for tweet in self.tweets_list]
+        self.statuses_count= [tweet["user"]['statuses_count'] for tweet in self.tweets_list]
         return self.statuses_count
         
     def find_full_text(self)->list:
@@ -74,6 +75,7 @@ class TweetDfExtractor:
         return friends_count
 
     def is_sensitive(self)->list:
+        # is_sensitive = [x['possibly_sensitive'] for x in self.tweets_list]
         try:
             is_sensitive=[]
             for tweet in self.tweets_list:
@@ -81,13 +83,7 @@ class TweetDfExtractor:
                     is_sensitive.append(tweet['possibly_sensitive'])
                 else: is_sensitive.append(None) 
         except KeyError:
-            # raise('modify the code')
-            print(f'the error is : {KeyError}')
-
-        # 
-        #     is_sensitive = [x['possibly_sensitive'] for x in self.tweets_list]
-        # except KeyError:
-        #     is_sensitive = ''
+            is_sensitive = ''
         return is_sensitive
 
     def find_favourite_count(self)->list:
@@ -151,7 +147,17 @@ if __name__ == "__main__":
     columns = ['created_at', 'source', 'original_text','clean_text', 'sentiment','polarity','subjectivity', 'lang', 'favorite_count', 'retweet_count', 
     'original_author', 'screen_count', 'followers_count','friends_count','possibly_sensitive', 'hashtags', 'user_mentions', 'place', 'place_coord_boundaries']
     _, tweet_list = read_json("/Users/apple/Desktop/10 academy/data/africa_twitter_data.json")
+    # tweet = TweetDfExtractor(tweet_list)
+    # tweet_df = tweet.get_tweet_df()
     tweet = TweetDfExtractor(tweet_list)
-    tweet_df = tweet.get_tweet_df() 
+    # statuses_count =tweet.find_statuses_count()
+    # print(type(statuses_count))
+    # print(statuses_count[0])
+    # full_text=tweet.find_full_text() 
+    # print(type(full_text))
+    # print(full_text[0])
+    is_sensitive= tweet.is_sensitive()
+    print(type(is_sensitive))
+    print(is_sensitive[:6])
 
     # use all defined functions to generate a dataframe with the specified columns above
