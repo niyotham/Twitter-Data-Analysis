@@ -80,19 +80,21 @@ class TestTweetDfExtractor(unittest.TestCase):
 
 
     def test_find_screen_name(self):
-        name = <provide a list of the first five screen names>
+        name =[tweet['user']['name'] for tweet in tweet_list] #<provide a list of the first five screen names>
         self.assertEqual(self.df.find_screen_name(), name)
 
     def test_find_followers_count(self):
-        f_count = <provide a list of the first five follower counts>
+        f_count = [tweet['user']['followers_count'] for tweet in tweet_list]#<provide a list of the first five follower counts>
         self.assertEqual(self.df.find_followers_count(), f_count)
 
     def test_find_friends_count(self):
-        friends_count = <provide a list of the first five friend's counts>
+        friends_count = [tweet['user']['friends_count']  for tweet in tweet_list]#<provide a list of the first five friend's counts>
         self.assertEqual(self.df.find_friends_count(), friends_count)
 
     def test_find_is_sensitive(self):
-        self.assertEqual(self.df.is_sensitive(), <provide a list of the first five is_sensitive values>)
+        possibly_sensitive =[x['possibly_sensitive'] for x in self.tweets_list]
+        self.assertEqual(self.df.is_sensitive(), 
+        possibly_sensitive)
 
 
     # def test_find_hashtags(self):
